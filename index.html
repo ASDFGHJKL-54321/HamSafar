@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>همسفر | مسیریاب هوشمند</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ font-family:Tahoma,Arial,sans-serif;
+ background:#eef5ff;
+ color:#17345a;
+}
+header{
+ background:#0879df;
+ color:white;
+ padding:22px 18px;
+ border-radius:0 0 24px 24px;
+}
+header h1{margin:0;font-size:27px}
+header p{margin:8px 0 0;font-size:14px}
+main{padding:16px}
+.search{
+ background:white;
+ padding:12px;
+ border-radius:14px;
+ display:flex;
+ gap:8px;
+ box-shadow:0 3px 12px #0001;
+}
+input{
+ border:0;outline:0;
+ flex:1;min-width:0;
+ font-size:15px;
+}
+button{
+ border:0;border-radius:12px;
+ background:#0879df;
+ color:white;padding:13px;
+ font-size:14px;
+ cursor:pointer;
+}
+#map{
+ height:390px;
+ margin-top:16px;
+ border-radius:18px;
+ overflow:hidden;
+ border:2px solid white;
+}
+.actions{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:10px;margin-top:15px;
+}
+.actions button{padding:16px}
+.secondary{background:#173e70}
+.info{
+ background:white;
+ padding:16px;
+ border-radius:16px;
+ margin-top:15px;
+ line-height:2;
+}
+footer{
+ text-align:center;
+ color:#66809e;
+ padding:20px;
+ font-size:12px;
+}
+</style>
+</head>
+<body>
+
+<header>
+<h1>🚗 همسفر</h1>
+<p>همراه هوشمند شما در تمام مسیرها</p>
+</header>
+
+<main>
+<div class="search">
+<input id="destination" placeholder="مقصد خود را وارد کنید">
+<button onclick="searchPlace()">جست‌وجو</button>
+</div>
+
+<div id="map"></div>
+
+<div class="actions">
+<button onclick="myLocation()">📍 موقعیت من</button>
+<button class="secondary" onclick="route()">🧭 مسیریابی</button>
+</div>
+
+<div class="info">
+<strong>به همسفر خوش آمدید!</strong>
+<div id="status">برای مشاهده موقعیت خود، دکمه موقعیت من را بزنید.</div>
+</div>
+</main>
+
+<footer>
+همسفر | نسخه آزمایشی ۱.۰
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const map=L.map('map').setView([32.0,51.0],6);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+ attribution:'© OpenStreetMap'
+}).addTo(map);
+
+let marker=null;
+
+function myLocation(){
+ if(!navigator.geolocation){
+  document.getElementById('status').innerText=
+  'موقعیت‌یابی در این مرورگر پشتیبانی نمی‌شود.';
+  return;
+ }
+ document.getElementById('status').innerText=
+ 'در حال دریافت موقعیت شما...';
+
+ navigator.geolocation.getCurrentPosition(pos=>{
+  const lat=pos.coords.latitude;
+  const lon=pos.coords.longitude;
+  map.setView([lat,lon],16);
+  if(marker) map.removeLayer(marker);
+  marker=L.marker([lat,lon]).addTo(map)
+   .bindPopup('موقعیت فعلی شما').openPopup();
+  document.getElementById('status').innerText=
+   'موقعیت شما با موفقیت دریافت شد.';
+ },()=>{
+  document.getElementById('status').innerText=
+  'دریافت موقعیت ناموفق بود. دسترسی GPS را بررسی کنید.';
+ });
+}
+
+function searchPlace(){
+ const q=document.getElementById('destination').value.trim();
+ if(!q){
+  document.getElementById('status').innerText=
+  'لطفاً نام مقصد را وارد کنید.';
+  return;
+ }
+ document.getElementById('status').innerText=
+ 'مقصد انتخابی: '+q+' — جست‌وجوی نقشه در مرحله بعد فعال می‌شود.';
+}
+
+function route(){
+ document.getElementById('status').innerText=
+ 'سامانه محاسبه مسیر در مرحله بعد اضافه خواهد شد.';
+}
+</script>
+</body>
+</html>

@@ -136,16 +136,41 @@ function myLocation(){
  });
 }
 
-function searchPlace(){
- const q=document.getElementById('destination').value.trim();
- if(!q){
-  document.getElementById('status').innerText=
-  'لطفاً نام مقصد را وارد کنید.';
-  return;
- }
- document.getElementById('status').innerText=
- 'مقصد انتخابی: '+q+' — جست‌وجوی نقشه در مرحله بعد فعال می‌شود.';
+
+async function searchPlace(){
+  const q = document.getElementById('destination').value.trim();
+
+  if(!q){
+    document.getElementById('status').innerText = 'لطفاً نام مقصد را وارد کنید.';
+    return;
+  }
+
+  document.getElementById('status').innerText = 'در حال جستجو...';
+
+  try {
+    const url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q=' + encodeURIComponent(q);
+    const response = await fetch(url);
+    const results = await response.json();
+
+    if(!results.length){
+      document.getElementById('status').innerText = 'مقصد پیدا نشد.';
+      return;
+    }
+
+    const lat = Number(results[0].lat);
+    const lon = Number(results[0].lon);
+
+    map.setView([lat, lon], 15);
+    L.marker([lat, lon]).addTo(map)
+      .bindPopup(results[0].display_name)
+      .openPopup();
+
+    document.getElementById('status').innerText = 'مقصد پیدا شد.';
+  } catch(error) {
+    document.getElementById('status').innerText = 'خطا در جستجو. اینترنت را بررسی کنید.';
+  }
 }
+
 
 function route(){
  document.getElementById('status').innerText=

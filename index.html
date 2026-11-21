@@ -166,7 +166,8 @@ async function searchPlace(){
 
     const lat = Number(results[0].lat);
     const lon = Number(results[0].lon);
-
+destinationLat = lat;
+destinationLon = lon;
     map.setView([lat, lon], 15);
     L.marker([lat, lon]).addTo(map)
       .bindPopup(results[0].display_name)

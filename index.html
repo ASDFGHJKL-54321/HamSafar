@@ -276,42 +276,7 @@ voiceButton.onclick = testVoice;
 
 document.querySelector('.actions').appendChild(voiceButton);
  
-function voiceGuide(message) {
-  if (!('speechSynthesis' in window)) {
-    alert('مرورگر شما از راهنمای صوتی پشتیبانی نمی‌کند.');
-    return;
-  }
 
-  window.speechSynthesis.cancel();
-
-  const speech = new SpeechSynthesisUtterance(message);
-  speech.lang = 'fa-IR';
-  speech.rate = 0.9;
-  speech.pitch = 1;
-  speech.volume = 1;
-
-  const voices = window.speechSynthesis.getVoices();
-  const persianVoice = voices.find(v =>
-    v.lang && v.lang.toLowerCase().startsWith('fa')
-  );
-
-  if (persianVoice) {
-    speech.voice = persianVoice;
-  }
-
-  window.speechSynthesis.speak(speech);
-}
-
-function testVoice() {
-  voiceGuide('به همسفر خوش آمدید. راهنمای صوتی فارسی آماده است.');
-}
-
-const voiceButton = document.createElement('button');
-voiceButton.type = 'button';
-voiceButton.innerText = '🔊 آزمایش صدای راهنما';
-voiceButton.onclick = testVoice;
-
-document.querySelector('.actions').appendChild(voiceButton);
  
 </script>
 </body>

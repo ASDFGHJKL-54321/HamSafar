@@ -180,10 +180,65 @@ destinationLon = lon;
 }
 
 
-function route(){
- document.getElementById('status').innerText=
- 'سامانه محاسبه مسیر در مرحله بعد اضافه خواهد شد.';
+
+async function route(){
+
+  if(currentLat === null || currentLon === null){
+    document.getElementById('status').innerText =
+    'ابتدا موقعیت خود را مشخص کنید.';
+    return;
+  }
+
+  if(destinationLat === null || destinationLon === null){
+    document.getElementById('status').innerText =
+    'ابتدا مقصد را جستجو کنید.';
+    return;
+  }
+
+  document.getElementById('status').innerText =
+  'در حال محاسبه مسیر...';
+
+  try {
+    const url =
+    `https://router.project-osrm.org/route/v1/driving/${currentLon},${currentLat};${destinationLon},${destinationLat}?overview=full&geometries=geojson`;
+
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if(!data.routes || !data.routes.length){
+      throw new Error('مسیر پیدا نشد');
+    }
+
+    if(routeLayer){
+      map.removeLayer(routeLayer);
+    }
+
+    routeLayer = L.geoJSON(data.routes[0].geometry,{
+      style:{
+        color:'#0879df',
+        weight:6
+      }
+    }).addTo(map);
+
+    map.fitBounds(routeLayer.getBounds(),{
+      padding:[30,30]
+    });
+
+    const km =
+    (data.routes[0].distance/1000).toFixed(1);
+
+    const minutes =
+    Math.round(data.routes[0].duration/60);
+
+    document.getElementById('status').innerText =
+    `مسیر پیدا شد: ${km} کیلومتر، حدود ${minutes} دقیقه`;
+
+  } catch(error) {
+    document.getElementById('status').innerText =
+    'خطا در محاسبه مسیر؛ دوباره تلاش کنید.';
+  }
 }
+ 
 </script>
 </body>
 </html>

@@ -130,7 +130,8 @@ function myLocation(){
  navigator.geolocation.getCurrentPosition(pos=>{
   const lat=pos.coords.latitude;
   const lon=pos.coords.longitude;
-  map.setView([lat,lon],16);
+  map.setView([lat,lon],16);currentLat = lat;
+currentLon = lon;
   if(marker) map.removeLayer(marker);
   marker=L.marker([lat,lon]).addTo(map)
    .bindPopup('موقعیت فعلی شما').openPopup();

@@ -248,7 +248,7 @@ function voiceGuide(message) {
   window.speechSynthesis.cancel();
 
   const speech = new SpeechSynthesisUtterance(message);
-  speech.lang = 'fa-IR';
+  speech.lang = 'en-us';
   speech.rate = 0.9;
   speech.pitch = 1;
   speech.volume = 1;
@@ -266,7 +266,7 @@ function voiceGuide(message) {
 }
 
 function testVoice() {
-  voiceGuide('به همسفر خوش آمدید. راهنمای صوتی فارسی آماده است.');alert('دکمه صدای راهنما فعال است');
+  voiceGuide('به همسفر خوش آمدید. راهنمای صوتی فارسی آماده است.');
 }
 
 const voiceButton = document.createElement('button');

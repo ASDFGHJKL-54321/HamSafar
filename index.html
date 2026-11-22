@@ -262,7 +262,7 @@ function voiceGuide(message) {
     speech.voice = persianVoice;
   }
 
-  window.speechSynthesis.speak(speech);
+  window.speechSynthesis.speak(speech);window.speechSynthesis.resume();
 }
 
 function testVoice() {

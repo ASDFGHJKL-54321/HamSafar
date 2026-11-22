@@ -266,8 +266,8 @@ function voiceGuide(message) {
 }
 
 function testVoice() {
-  voiceGuide('به همسفر خوش آمدید. راهنمای صوتی فارسی آماده است.');
-}
+  const audio = new Audio('./talkbot_tueyt.mp3');
+audio.play();
 
 const voiceButton = document.createElement('button');
 voiceButton.type = 'button';
